@@ -1,9 +1,10 @@
 # Session authentication
 
-Requires Java 21, MySQL, and Redis. Create the MySQL database `session`, then set
-`DB_URL`, `DB_USERNAME`, and `DB_PASSWORD` as needed. Redis defaults to localhost:6379;
-override with `REDIS_HOST`, `REDIS_PORT`, and `REDIS_PASSWORD`.
+Requires Java 21 and MySQL. Check the database connection in
+`src/main/resources/application.properties`. Redis is not required; sessions use
+the servlet container and are lost when the application restarts.
 Run `./mvnw spring-boot:run` (Windows: `.\mvnw.cmd spring-boot:run`).
+The application listens on port 8081.
 
 Users are loaded from the existing User entity using UserRepository. Store passwords
 as BCrypt hashes created with the configured PasswordEncoder, never as plaintext.
@@ -26,8 +27,8 @@ migrated to enum names before using this version.
 5. POST `/auth/logout` with the token and cookie. Returns 204 and invalidates the
    session. Later protected requests return 401.
 
-Sessions expire after 30 minutes of inactivity and are stored in Redis. Clients must
+Clients must
 retain cookies (browser fetch: `credentials: 'include'`). This configuration assumes
-a same-origin frontend. For HTTPS deployments set `SESSION_COOKIE_SECURE=true`.
+a same-origin frontend. Set `server.servlet.session.cookie.secure=true` for HTTPS.
 Hibernate schema update is enabled for local development; use reviewed migrations
 and schema validation in production.

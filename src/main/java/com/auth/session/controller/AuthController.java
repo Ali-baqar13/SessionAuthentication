@@ -5,6 +5,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.csrf.CsrfToken;
+import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.web.bind.annotation.GetMapping;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -24,11 +25,20 @@ public class AuthController {
 
 
     private final AuthService authService;
+    private final CsrfTokenRepository csrfTokens;
 
-    public AuthController(AuthService authService) { this.authService = authService; }
+    public AuthController(AuthService authService, CsrfTokenRepository csrfTokens) {
+        this.authService = authService;
+        this.csrfTokens = csrfTokens;
+    }
 
     @GetMapping("/csrf")
-    public CsrfResponse csrf(CsrfToken token) {
+    public CsrfResponse csrf(HttpServletRequest request, HttpServletResponse response) {
+        CsrfToken token = csrfTokens.loadToken(request);
+        if (token == null) {
+            token = csrfTokens.generateToken(request);
+            csrfTokens.saveToken(token, request, response);
+        }
         return new CsrfResponse(token.getHeaderName(), token.getToken());
     }
 

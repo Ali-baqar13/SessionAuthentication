@@ -56,7 +56,8 @@ public class SecurityConfig {
         return http.authenticationManager(manager)
                 .securityContext(context -> context.securityContextRepository(contexts))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
-                .csrf(config -> config.csrfTokenRepository(csrf))
+                .csrf(config -> config.csrfTokenRepository(csrf)
+                        .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler()))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth", "/auth/login", "/auth/csrf", "/error").permitAll()
                         .anyRequest().authenticated())
