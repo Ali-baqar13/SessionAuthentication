@@ -1,4 +1,4 @@
-package com.auth.session.repository;
+package com.auth.session.Repository;
 
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;

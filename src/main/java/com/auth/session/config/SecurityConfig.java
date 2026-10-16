@@ -16,7 +16,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.session.*;
 import org.springframework.security.web.context.*;
 import org.springframework.security.web.csrf.*;
-import com.auth.session.repository.UserRepository;
+import com.auth.session.Repository.UserRepository;
 
 @Configuration
 public class SecurityConfig {
